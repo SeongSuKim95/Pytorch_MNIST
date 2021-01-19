@@ -5,6 +5,7 @@ from torch import optim
 from torchvision import datasets, transforms
 ## Data Split, Data Loader
 from torch.utils.data import random_split , DataLoader
+import cv2
 
 #torch.randn(5).cuda()
 
@@ -19,7 +20,7 @@ model = nn.Sequential(
 ## Define optimizer
 params = model.parameters()
 optimizer = optim.SGD(params, lr = 1e-2)
-#model = model.cuda()
+model = model.cuda()
 
 ## Define loss
 
@@ -27,8 +28,18 @@ loss = nn.CrossEntropyLoss()
 
 ## Train, Val split
 
-train_data = datasets.MNIST('data',train=True, download = True, transform = transforms.ToTensor())
-train, val = random_split(train_data,[55000,5000])
+train_set = datasets.MNIST('mnist',train=True, download = True, transform = transforms.ToTensor())
+
+#Visualizing MNIST
+print(train_set.train_data.shape)
+mnist_test = train_set.train_data[0].numpy()
+print(mnist_test)
+print(mnist_test.size)
+cv2.imshow('mnist',mnist_test)
+cv2.waitKey(0)
+###
+
+train, val = random_split(train_set,[55000,5000])
 train_loader = DataLoader(train, batch_size = 32)
 val_loader = DataLoader(val, batch_size = 32)
 
